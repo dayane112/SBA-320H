@@ -3,11 +3,14 @@ import { useState, useEffect } from 'react';
 import './App.css'
 
 function App() {
-  const [weather, setWeather] = useState(null);
+  const [weather, setWeather] = useState([]);
   const [lat, setLat] = useState(null);
   const [long, setLong] = useState(null);
   const [load, setload] = useState(true);
   const [error, setError] = useState(null);
+
+ const [ weatherData, setWeatherData ] = useState([])
+ const [area, setArea] = useState('')
 
   const apiKey = "eb889a65b1d1b573579883315f022ec8";
 
@@ -25,10 +28,11 @@ function App() {
         }
 
         const data = await res.json();
+        console.log('API res:', data);
         setWeather(data);
 
       } catch (err) {
-        setError(err.msg)
+        setError(err.message)
         console.error(err)
       } finally {
         setload(false)
@@ -43,7 +47,7 @@ function App() {
           const { latitude, longitude } = position.coords;
           setLat(latitude);
           setLong(longitude);
-          // FetchWeatherAuto(latitude, longitude);
+          // console.log(FetchWeatherAuto(latitude, longitude));
 
         });
       } else {
@@ -62,7 +66,7 @@ function App() {
 
   useEffect(() => {
     if (weather) {
-      console.log("Weather:", weather); 
+      console.log("Weather:", weather);
     }
   }, [weather]);
 
@@ -108,6 +112,9 @@ function App() {
   // function handleIconClick() {
 
   // }
+  // console.log('Weather:', weather);
+  // console.log('Load:', load);
+  // console.log('Error:', error);
 
 
   return (
@@ -121,6 +128,18 @@ function App() {
         </div>
         <input placeholder='Location...' type="text" />
       </span>
+      {weather && !load && !error && (
+        <div className="weather-data">
+          <h2>Weather for the Day!</h2>
+          <p>Location: {weather[0]?.name}, {weather[0]?.country}</p>
+          <p>Latitude: {weather[0]?.lat}</p>
+          <p>Longitude: {weather[0]?.lon}</p>
+          {/* <p>Weather: {weather[0]?.weather[0]?.description}</p> */}
+          {/* <p>Temperature: {weather[0]?.main?.temp}°C</p> */}
+          {/* <p>Humidity: {weather[0]?.main?.humidity}%</p> */}
+          {/* <p>Wind Speed: {weather[0]?.wind?.speed} m/s</p> */}
+        </div>
+      )}
     </>
   )
 }
