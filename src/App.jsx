@@ -1,6 +1,7 @@
 import { useState, useEffect } from 'react';
 import CurrentLocation from './components/currentLocation'
 import CurrentWeather from './components/currentWeather'
+import backgroundIMG from './utilities/backgroundIMG.mjs'
 import './App.css'
 
 function App() {
@@ -77,62 +78,72 @@ function App() {
     return date.toLocaleTimeString([], { hour: '2-digit', minute: '2-digit' });
   }
 
+  
+  const backgroundImage = weatherData ? backgroundIMG(weatherData.weather?.[0]?.main) : '';
+
+
+
   return (
     <>
-    
-        <div>
-        {weatherData && !load && !error ? (
-          <>
-          <div className='currentLocation'>
-            <CurrentLocation/>
-            <CurrentWeather/>
-          </div>
-          <br />
-          <form onSubmit={handleSubmit} >
-            <input placeholder='Location...' type="text" value={area} onChange={handleChange} />
-            <button type="submit">search</button>
-          </form>
-          </>
-         ) : null}
+      <div className='img' style={{backgroundImage: `url(${backgroundImage})`}}>
+        <div className="contentWrapper">
+          {weatherData && !load && !error ? (
+            <>
+              <div className='currentLocation'>
+                <CurrentLocation/>
+                <span className='align'>
+                <CurrentWeather/>
+                </span>
+              </div>
+              <br />
+              <form onSubmit={handleSubmit} className="center-form">
+                <input placeholder='Location...' type="text" value={area} onChange={handleChange}  />
+                <button type="submit">search</button>
+              </form>
+            </>
+          ) : null}
         </div>
         
         <br />
 
-      {weatherData && !load && !error && (
-        <div className="weatherData">
-          <h2>Weather for {weatherData.name}!</h2>
-          <div className='columns'>
-            <span className='left'>
-              <h3>City: </h3>
-              <h3>Description: </h3> 
-              <h3>Temperature: </h3>
-              <h3>Feels like: </h3>
-              <h3>Humidity: </h3>
-              <h3>Wind: </h3>
-              <h3>Sunrise: </h3>
-              <h3>Sunset: </h3>
+        {weatherData && !load && !error && (
+          <div className="weatherData">
+            <h2>Weather for {weatherData.name}!</h2>
+            <div className='columns'>
+              <span className='left'>
+                <h3>City: </h3>
+                <h3>Description: </h3> 
+                <h3>Temperature: </h3>
+                <h3>Feels like: </h3>
+                <h3>Humidity: </h3>
+                <h3>Wind: </h3>
+                <h3>Sunrise: </h3>
+                <h3>Sunset: </h3>
 
-            </span>
-            <span className='right'>
-              <p>{weatherData.name}</p>
-              <p>{weatherData.weather[0].description}</p>
-              <p>{weatherData?.main?.temp ? fahrenheitData(weatherData.main.temp).toFixed(1) : 'Unable to retrieve data'} °F</p>
-              <p>{weatherData.main.feels_like}</p>
-              <p>{weatherData.main.humidity}%</p>
-              <p>{weatherData.wind.speed} mph</p>
-              <p>{formatTime(weatherData.sys.sunrise, weatherData.timezone)}</p>
-              <p>{formatTime(weatherData.sys.sunset, weatherData.timezone)}</p>
-
-              
-            </span>
+              </span>
+              <span className='right'>
+                <p>{weatherData.name}, {weatherData.sys.country}</p>
+                <p>{weatherData.weather[0].description}</p>
+                <p>{weatherData?.main?.temp ? fahrenheitData(weatherData.main.temp).toFixed(1) : 'Unable to retrieve data'} °F</p>
+                <p>{weatherData.main.feels_like}</p>
+                <p>{weatherData.main.humidity}%</p>
+                <p>{weatherData.wind.speed} mph</p>
+                <p>{formatTime(weatherData.sys.sunrise, weatherData.timezone)}</p>
+                <p>{formatTime(weatherData.sys.sunset, weatherData.timezone)}</p>
+              </span>
+            </div>
           </div>
-        </div>
-      )}
+        )}
+      </div>
     </>
   )
+
 }
 
 export default App
+
+
+
 
         {/* <div style={{ cursor: 'pointer' }}>
           <svg xmlns="http://www.w3.org/2000/svg" width="16" height="16" fill="currentColor" className="inline-block" viewBox="0 0 16 16">
