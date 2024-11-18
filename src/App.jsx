@@ -55,7 +55,20 @@ function App() {
         location();
   }, [])
 
+  function handleChange(e) {
+    setArea(e.target.value);
+  }
 
+  function handleSubmit(e) {
+    e.preventDefault();
+    if(area) {
+      fetchWeather(null, null);
+    }
+  }
+
+  function fahrenheitData (celsius) {
+    return (celsius * 9) / 5 + 32;
+  } 
 
   return (
     <>
@@ -66,14 +79,17 @@ function App() {
             <path d="M8 8a2 2 0 1 1 0-4 2 2 0 0 1 0 4m0 1a3 3 0 1 0 0-6 3 3 0 0 0 0 6" />
           </svg>
         </div>
-        <input placeholder='Location...' type="text" />
+        <form onSubmit={handleSubmit} >
+        <input placeholder='Location...' type="text" value={area} onChange={handleChange} />
+        <button type="submit">search</button>
+        </form>
       </span>
       {weatherData && !load && !error && (
-        <div className="weather-data">
+        <div className="weatherData">
           <h2>Weather for the Day!</h2>
-          <p>Location: {weatherData[0]?.name}, {weatherData[0]?.country}</p>
-          <p>Latitude: {weatherData[0]?.lat}</p>
-          <p>Longitude: {weatherData[0]?.lon}</p>
+          <h3>{weatherData.name}</h3>
+          {/* <p>Latitude: {weatherData[0]?.lat}</p>
+          <p>Longitude: {weatherData[0]?.lon}</p> */}
           {/* <p>Weather: {weather[0]?.weather[0]?.description}</p> */}
           {/* <p>Temperature: {weather[0]?.main?.temp}°C</p> */}
           {/* <p>Humidity: {weather[0]?.main?.humidity}%</p> */}
