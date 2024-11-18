@@ -30,15 +30,30 @@ function App() {
       return;
     }
     setLoad(true);
-    setError('')
+    setError('');
 
     const response = await fetch(url);
     const data = await response.json();
 
     setWeatherData(data);
     setLoad(false); 
-
   }
+
+  useEffect(() => {
+    async function location() {
+          if (navigator.geolocation) {
+            navigator.geolocation.getCurrentPosition((position) => {
+              const { latitude, longitude } = position.coords;
+              fetchWeather(latitude, longitude);
+            }
+          )
+          } else {
+            setError('Location not available')
+            setLoad(false)
+          }
+        }
+        location();
+  }, [])
 
 
 
